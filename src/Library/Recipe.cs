@@ -80,18 +80,30 @@ namespace Full_GRASP_And_SOLID
         //Agregado por Creator. 
         public void Cook()
         {
-            if (!this.Cooked)
-            {
-                TimerClient client = new Time(this);
-                CountdownTimer count = new CountdownTimer();
-                count.Register(this.GetCookTime(), client);
-            }
+            if (this.Cooked) throw new Exception("Ya está cocido");
+            
+            TimerClient client = new Time(this);
+            CountdownTimer count = new CountdownTimer();
+            count.Register(this.GetCookTime(), client);
+            
         }
 
-        public void ChangeCookedStatus()
+        //Para que cumpla con SRP
+        public class Time : TimerClient
         {
-            this.Cooked = true; 
-        }
 
+            private Recipe Recipe;
+
+            public Time(Recipe recipe)
+            {
+                this.Recipe = recipe;
+            }
+
+            public void TimeOut()
+            {
+                Recipe.Cooked = true;
+            }
+
+        }
     }
 }
